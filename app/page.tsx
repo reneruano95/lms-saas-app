@@ -2,6 +2,7 @@ import React from "react";
 import CompanionCard from "@/components/companion-card";
 import CompanionsList from "@/components/companions-list";
 import CallToAction from "@/components/call-to-action";
+import { recentSessions } from "@/constants";
 
 const Page = () => {
   return (
@@ -34,8 +35,12 @@ const Page = () => {
           color="#bde7ff"
         />
       </section>
-      <section className="home-section">
-        <CompanionsList />
+      <section className="home-section lg:items-stretch">
+        <CompanionsList
+          title="Recently Completed Sessions"
+          companions={recentSessions}
+          classNames="w-2/3 max-lg:w-full"
+        />
         <CallToAction />
       </section>
     </main>
