@@ -1,7 +1,11 @@
 import React from "react";
 
-const CompanionSessionPage = () => {
-  return <div>CompanionSessionPage</div>;
+const CompanionSessionPage = ({
+  params: { id },
+}: {
+  params: { id: string };
+}) => {
+  return <div>CompanionSessionPage {id}</div>;
 };
 
 export default CompanionSessionPage;
