@@ -1,3 +1,4 @@
+import CompanionComponent from "@/components/companion-component";
 import { getCompanion } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs/server";
@@ -14,8 +15,10 @@ interface CompanionSessionPageProps {
 const CompanionSessionPage = async ({ params }: CompanionSessionPageProps) => {
   const { id } = await params;
 
-  const { name, topic, subject, duration, voice } = await getCompanion(id);
+  const companion = await getCompanion(id);
   const user = await currentUser();
+
+  const { name, topic, subject, duration, voice } = companion;
 
   if (!user) {
     redirect("/sign-in");
@@ -24,15 +27,6 @@ const CompanionSessionPage = async ({ params }: CompanionSessionPageProps) => {
   if (!name) {
     redirect("/companions");
   }
-
-  console.log("Companion:", {
-    id,
-    name,
-    topic,
-    subject,
-    duration,
-    voice,
-  });
 
   return (
     <main>
@@ -63,6 +57,16 @@ const CompanionSessionPage = async ({ params }: CompanionSessionPageProps) => {
           {duration} minutes
         </div>
       </article>
+      <CompanionComponent
+        companionId={id}
+        userName={user.firstName!}
+        userImage={user.imageUrl!}
+        subject={subject!}
+        topic={topic!}
+        name={name}
+        voice={voice!}
+        style={companion.style!}
+      />
     </main>
   );
 };
