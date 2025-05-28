@@ -16,7 +16,7 @@ const CompanionsLibraryPage = async ({ searchParams }: SearchParams) => {
 
   return (
     <main>
-      <section className="flex justify-between gap-4 max-sm:flex-col">
+      <section className="flex justify-between gap-4 max-sm:flex-col min-sm:items-center">
         <h1>Companion Library</h1>
         <div className="flex gap-4 items-stretch">
           <SearchInput />
@@ -28,11 +28,11 @@ const CompanionsLibraryPage = async ({ searchParams }: SearchParams) => {
           <CompanionCard
             key={id}
             id={id}
-            name={name as string}
-            topic={topic as string}
-            subject={subject as string}
-            duration={duration as number}
-            color={getSubjectColor(subject as string) || "#f0f0f0"}
+            name={name!}
+            topic={topic!}
+            subject={subject!}
+            duration={duration!}
+            color={getSubjectColor(subject!)}
           />
         ))}
       </section>
