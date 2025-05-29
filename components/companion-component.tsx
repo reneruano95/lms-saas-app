@@ -6,7 +6,6 @@ import Image from "next/image";
 import React from "react";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import soundwaves from "@/constants/soundwaves.json";
-import { set } from "zod";
 
 enum CallStatus {
   INACTIVE = "inactive",
@@ -30,8 +29,8 @@ const CompanionComponent = ({
   );
 
   const [isSpeaking, setIsSpeaking] = React.useState<boolean>(false);
-
   const [isMuted, setIsMuted] = React.useState<boolean>(false);
+  const [messages, setMessages] = React.useState<SavedMessage[]>([]);
 
   const lottieRef = React.useRef<LottieRefCurrentProps>(null);
 
@@ -52,7 +51,13 @@ const CompanionComponent = ({
     const onCallEnd = () => {
       setCallStatus(CallStatus.FINISHED);
     };
-    const onMessage = () => {};
+    const onMessage = (message: Message) => {
+      if (message.type === "transcript" && message.transcriptType === "final") {
+        const newMessage = { role: message.role, content: message.transcript };
+
+        setMessages((prevMessages) => [newMessage, ...prevMessages]);
+      }
+    };
 
     const onSpeechStart = () => {
       setIsSpeaking(true);
@@ -166,7 +171,11 @@ const CompanionComponent = ({
             />
             <p className="font-bold text-2xl">{userName}</p>
           </div>
-          <button className="btn-mic" onClick={toggleMicrophone}>
+          <button
+            className="btn-mic"
+            onClick={toggleMicrophone}
+            disabled={callStatus !== CallStatus.ACTIVE}
+          >
             <Image
               src={isMuted ? "/icons/mic-off.svg" : "/icons/mic-on.svg"}
               alt="microphone"
@@ -194,7 +203,29 @@ const CompanionComponent = ({
         </div>
       </section>
       <section className="transcript">
-        <div className="transcript-message no-scrollbar">MESSAGES</div>
+        <div className="transcript-message no-scrollbar">
+          {messages.map((message, index) => {
+            if (message.role === "assistant") {
+              return (
+                <p key={message.role + index} className="max-sm:text-sm">
+                  {name.split(" ")[0].replace("/[.,]/g", "")}: {message.content}
+                </p>
+              );
+            } else {
+              return (
+                <p
+                  key={message.role + index}
+                  className="text-primary max-sm:text-sm"
+                >
+                  {userName.split(" ")[0].replace("/[.,]/g", "")}:{" "}
+                  {message.content}
+                </p>
+              );
+            }
+          })}
+        </div>
+
+        <div className="transcript-fade" />
       </section>
     </section>
   );
