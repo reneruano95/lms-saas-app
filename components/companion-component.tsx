@@ -1,11 +1,12 @@
 "use client";
 
-import { cn, getSubjectColor } from "@/lib/utils";
+import { cn, configureAssistant, getSubjectColor } from "@/lib/utils";
 import { vapi } from "@/lib/vapi/vapi.sdk";
 import Image from "next/image";
 import React from "react";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import soundwaves from "@/constants/soundwaves.json";
+import { set } from "zod";
 
 enum CallStatus {
   INACTIVE = "inactive",
@@ -89,6 +90,28 @@ const CompanionComponent = ({
     setIsMuted(!isMuted);
   };
 
+  const handleCall = async () => {
+    setCallStatus(CallStatus.CONNECTING);
+
+    const assistantOverrides = {
+      variableValues: {
+        subject,
+        topic,
+        style,
+      },
+      clientMessages: ["transcript"],
+      serverMessages: [],
+    };
+
+    //@ts-expect-error
+    vapi.start(configureAssistant(voice, style), assistantOverrides);
+  };
+
+  const handleDisconnect = () => {
+    setCallStatus(CallStatus.FINISHED);
+    vapi.stop();
+  };
+
   return (
     <section className="flex flex-col h-[70vh]">
       <section className="flex gap-8 max-sm:flex-col">
@@ -126,7 +149,7 @@ const CompanionComponent = ({
                 lottieRef={lottieRef}
                 animationData={soundwaves}
                 autoPlay={false}
-                className="companion-builder"
+                className="companion-lottie"
               />
             </div>
           </div>
@@ -158,9 +181,9 @@ const CompanionComponent = ({
               callStatus === CallStatus.ACTIVE ? "bg-red-700" : "bg-primary",
               callStatus === CallStatus.CONNECTING && "animate-pulse"
             )}
-            // onClick={
-            //   callStatus === CallStatus.ACTIVE ? handleDisconnect : handleCall
-            // }
+            onClick={
+              callStatus === CallStatus.ACTIVE ? handleDisconnect : handleCall
+            }
           >
             {callStatus === CallStatus.ACTIVE
               ? "End Session"
@@ -169,6 +192,9 @@ const CompanionComponent = ({
               : "Start Session"}
           </button>
         </div>
+      </section>
+      <section className="transcript">
+        <div className="transcript-message no-scrollbar">MESSAGES</div>
       </section>
     </section>
   );
