@@ -2,36 +2,43 @@ import React from "react";
 import CompanionCard from "@/components/companion-card";
 import CompanionsList from "@/components/companions-list";
 import CallToAction from "@/components/call-to-action";
-import {
-  getAllCompanions,
-  getRecentSessions,
-} from "@/lib/actions/companion.actions";
-import { getSubjectColor } from "@/lib/utils";
+import { recentSessions } from "@/constants";
 
-const Page = async () => {
-  const companions = await getAllCompanions({ limit: 3 });
-  const recentSessionsCompanions = await getRecentSessions(10);
-
+const Page = () => {
   return (
     <main>
       <h1 className="text-2xl underline">Popular Companions</h1>
       <section className="home-section">
-        {companions.map((companion) => (
-          <CompanionCard
-            key={companion.id}
-            id={companion.id}
-            name={companion.name!}
-            topic={companion.topic!}
-            subject={companion.subject!}
-            duration={companion.duration!}
-            color={getSubjectColor(companion.subject!)}
-          />
-        ))}
+        <CompanionCard
+          id="123"
+          name="Neura the Brainy Explorer"
+          topic="Neral Network of the Brain"
+          subject="neuroscience"
+          duration={45}
+          color="#ffda6e"
+        />
+        <CompanionCard
+          id="456"
+          name="Countsy the Math Wizard"
+          topic="Derivates and Integrals"
+          subject="maths"
+          duration={30}
+          color="#e5d0ff"
+        />
+
+        <CompanionCard
+          id="789"
+          name="Verba the Vocabulary Builder"
+          topic="English Literature"
+          subject="language"
+          duration={30}
+          color="#bde7ff"
+        />
       </section>
-      <section className="home-section">
+      <section className="home-section lg:items-stretch">
         <CompanionsList
           title="Recently Completed Sessions"
-          companions={recentSessionsCompanions}
+          companions={recentSessions}
           classNames="w-2/3 max-lg:w-full"
         />
         <CallToAction />
