@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { createSupabaseClient } from "../supabase/client";
+import { createSupabaseClient } from "../supabase/supabase.client";
 import { revalidatePath } from "next/cache";
 
 const supabase = createSupabaseClient();
