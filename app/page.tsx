@@ -9,32 +9,44 @@ import {
 } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 const Page = async () => {
   const companions = await getAllCompanions({ limit: 3 });
   const recentSessionsCompanions = await getRecentSessions(10);
+
+  const companionsWithBookmarks = await Promise.all(
+    companions.map(async ({ id }) => {
+      const bookmarked = await isBookmarked(id);
+      return {
+        id,
+        bookmarked,
+      };
+    })
+  );
 
   return (
     <main>
       <h1 className="text-2xl underline">Popular Companions</h1>
       <section className="home-section">
-        {await Promise.all(
-          companions.map(async ({ id, name, topic, subject, duration }) => {
-            const bookmarked = await isBookmarked(id);
-
-            return (
-              <CompanionCard
-                key={id}
-                id={id}
-                name={name!}
-                topic={topic!}
-                subject={subject!}
-                duration={duration!}
-                color={getSubjectColor(subject!)}
-                bookmarked={bookmarked ? true : false}
-              />
-            );
-          })
-        )}
+        {companions.map(({ id, name, topic, subject, duration }) => {
+          return (
+            <CompanionCard
+              key={id}
+              id={id}
+              name={name!}
+              topic={topic!}
+              subject={subject!}
+              duration={duration!}
+              color={getSubjectColor(subject!)}
+              bookmarked={
+                companionsWithBookmarks.find((c) => c.id === id)?.bookmarked
+                  ? true
+                  : false
+              }
+            />
+          );
+        })}
       </section>
       <section className="home-section">
         <CompanionsList
