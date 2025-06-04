@@ -35,21 +35,25 @@ This is a comprehensive Learning Management System (LMS) SaaS application built 
 The project follows a standard Next.js application structure:
 
 - **app/**: Contains the Next.js application pages and routes
+
   - **page.tsx**: Main landing page
   - **layout.tsx**: Root layout component
   - **[other routes]**: Additional application routes
 
 - **components/**: Reusable UI components
+
   - **ui/**: Basic UI components (buttons, inputs, etc.)
   - **[feature-specific components]**: Components organized by feature
 
 - **constants/**: Constant values used throughout the application
 
 - **lib/**: Utility functions and libraries
+
   - **supabase/**: Supabase client configuration
   - **[other utility modules]**: Additional utility functions
 
 - **public/**: Static assets including images and icons
+
   - **readme/**: Images used in documentation
 
 - **types/**: TypeScript type definitions
@@ -106,6 +110,18 @@ Supabase is used as the database solution, providing:
 
 👉 **API Generation**: Automatically generated APIs for database tables.
 
+### Database Seed
+
+The project includes a SQL seed file to populate the database with initial data. You can find the seed file at `lib/supabase/supabase.seed.sql`.
+
+To apply the seed file:
+
+1. Open your Supabase SQL editor.
+2. Copy the contents of `supabase.seed.sql`.
+3. Paste the SQL commands into the editor and execute them.
+
+This will set up the necessary tables and initial data for the application.
+
 ## <a name="voice-ai">🎙️ Voice AI Integration</a>
 
 Vapi integration enables:
@@ -150,9 +166,6 @@ npm install
 Create a new file named `.env.local` in the root of your project based on the `.env.local.example` file and add your credentials:
 
 ```env
-# Sentry
-SENTRY_AUTH_TOKEN=
-
 # Vapi
 NEXT_PUBLIC_VAPI_WEB_TOKEN=
 
