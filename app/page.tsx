@@ -5,6 +5,7 @@ import CallToAction from "@/components/call-to-action";
 import {
   getAllCompanions,
   getRecentSessions,
+  isBookmarked,
 } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
 
@@ -16,17 +17,24 @@ const Page = async () => {
     <main>
       <h1 className="text-2xl underline">Popular Companions</h1>
       <section className="home-section">
-        {companions.map((companion) => (
-          <CompanionCard
-            key={companion.id}
-            id={companion.id}
-            name={companion.name!}
-            topic={companion.topic!}
-            subject={companion.subject!}
-            duration={companion.duration!}
-            color={getSubjectColor(companion.subject!)}
-          />
-        ))}
+        {await Promise.all(
+          companions.map(async ({ id, name, topic, subject, duration }) => {
+            const bookmarked = await isBookmarked(id);
+
+            return (
+              <CompanionCard
+                key={id}
+                id={id}
+                name={name!}
+                topic={topic!}
+                subject={subject!}
+                duration={duration!}
+                color={getSubjectColor(subject!)}
+                bookmarked={bookmarked ? true : false}
+              />
+            );
+          })
+        )}
       </section>
       <section className="home-section">
         <CompanionsList

@@ -34,6 +34,35 @@ export type Database = {
   };
   lms_saas_app: {
     Tables: {
+      bookmarks: {
+        Row: {
+          companion_id: string;
+          created_at: string;
+          id: string;
+          user_id: string;
+        };
+        Insert: {
+          companion_id?: string;
+          created_at?: string;
+          id?: string;
+          user_id: string;
+        };
+        Update: {
+          companion_id?: string;
+          created_at?: string;
+          id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "bookmarks_companion_id_fkey";
+            columns: ["companion_id"];
+            isOneToOne: false;
+            referencedRelation: "companions";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       companions: {
         Row: {
           author: string | null;

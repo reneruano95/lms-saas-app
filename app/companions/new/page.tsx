@@ -14,7 +14,6 @@ const NewCompanionPage = async () => {
   }
 
   const canCreateCompanion = await newCompanionPermissions();
-  console.log("Can create companion:", canCreateCompanion);
 
   return (
     <main className="min-xl:w-1/3 min-lg:w-1/2  min-md:w-2/3 items-center justify-center">

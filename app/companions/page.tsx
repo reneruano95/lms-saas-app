@@ -1,7 +1,10 @@
 import CompanionCard from "@/components/companion-card";
 import SearchInput from "@/components/search-input";
 import SubjectFilter from "@/components/subject-filter";
-import { getAllCompanions } from "@/lib/actions/companion.actions";
+import {
+  getAllCompanions,
+  isBookmarked,
+} from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
 import React from "react";
 
@@ -12,7 +15,6 @@ const CompanionsLibraryPage = async ({ searchParams }: SearchParams) => {
   const topic = filters.topic ? filters.topic : "";
 
   const companions = await getAllCompanions({ subject, topic });
-  // console.log("Companions:", companions);
 
   return (
     <main>
@@ -24,17 +26,24 @@ const CompanionsLibraryPage = async ({ searchParams }: SearchParams) => {
         </div>
       </section>
       <section className="companions-grid">
-        {companions.map(({ id, name, topic, subject, duration }) => (
-          <CompanionCard
-            key={id}
-            id={id}
-            name={name!}
-            topic={topic!}
-            subject={subject!}
-            duration={duration!}
-            color={getSubjectColor(subject!)}
-          />
-        ))}
+        {await Promise.all(
+          companions.map(async ({ id, name, topic, subject, duration }) => {
+            const bookmarked = await isBookmarked(id);
+
+            return (
+              <CompanionCard
+                key={id}
+                id={id}
+                name={name!}
+                topic={topic!}
+                subject={subject!}
+                duration={duration!}
+                color={getSubjectColor(subject!)}
+                bookmarked={bookmarked ? true : false}
+              />
+            );
+          })
+        )}
       </section>
     </main>
   );
